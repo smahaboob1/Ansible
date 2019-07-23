@@ -1,0 +1,44 @@
+---
+- hosts: websrv_grp
+  become: yes
+  tasks:
+    - name: Install Apache in Ubuntu
+      apt:
+        name: apache2
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Restart Services in Ubuntu
+      service:
+        name: apache2
+        state: restarted
+        enabled: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Install Apache in CentOS
+      yum:
+        name: httpd
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Restart Services in CentOS
+      service:
+        name: httpd
+        state: restarted
+        enabled: yes
+      when: ansible_os_family == "RedHat"
+
+
+- hosts: dbsrv_grp
+  become: yes
+  tasks:
+    - name: Install MariaDB 
+      yum:
+        name: mariadb-server
+        state: present
+
+    - name: Restart MariaDV
+      service:
+        name: mariadb
+        state: restarted
+        enabled: yes

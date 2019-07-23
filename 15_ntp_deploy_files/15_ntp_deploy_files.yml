@@ -1,0 +1,32 @@
+---
+- hosts: all
+  tasks:
+     - name: Deploy NTP SVC
+       yum:
+         name: ntp
+         state: present
+       when:
+         ansible_os_family == "RedHat"
+
+     - name: Restart NTP SVC
+       service:
+         name: ntpd
+         state: started
+         enabled: yes
+       when:
+         ansible_os_family == "RedHat"
+
+     - name: Deploy NTP files
+       copy:
+         src: files/ntp.conf
+         dest: /etc/ntp.conf 
+         backup: yes
+       when:
+         ansible_os_family == "RedHat"
+
+     - name: Restart NTP SVC
+       service:
+         name: ntpd
+         state: restarted
+       when:
+         ansible_os_family == "RedHat"

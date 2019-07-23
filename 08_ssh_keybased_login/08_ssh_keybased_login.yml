@@ -1,0 +1,70 @@
+---
+- hosts: websrv_grp
+  become: yes
+  tasks:
+    
+    # Print OS details
+    ###################
+    - name: Print OS Family
+      debug:
+        msg: 
+          - "OS Family is        : {{ ansible_os_family }}"
+          - "The IP address is   : {{ ansible_all_ipv4_addresses }}"
+          - "Available memory is : {{ ansible_memory_mb.real.total }}"
+          - "Python version is   : {{ ansible_python.version_info[0] }}"
+
+    # Install Apache in Ubuntu
+    ##########################
+    - name: Install Apache in Ubuntu
+      apt:
+        name: apache2
+        state: present
+      when: ansible_os_family == "Debian"
+
+    # Deploy Index File
+    #####################
+    - name: Deploy index file
+      copy:
+        src: /tmp/2115_marvel/
+        dest: /var/www/html/
+        owner: root
+        group: root
+        backup: yes
+
+    - name: Restart Services in Ubuntu
+      service:
+        name: apache2
+        state: restarted
+        enabled: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Install Apache in CentOS
+      yum:
+        name: httpd
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Restart Services in CentOS
+      service:
+        name: httpd
+        state: restarted
+        enabled: yes
+      when: ansible_os_family == "RedHat"
+
+
+- hosts: dbsrv_grp
+  become: yes
+  tasks:
+    - name: Print OS version
+      debug: 
+        msg: "Database OS is {{ansible_os_family}}"
+    - name: Install MariaDB 
+      yum:
+        name: mariadb-server
+        state: present
+
+    - name: Restart MariaDV
+      service:
+        name: mariadb
+        state: restarted
+        enabled: yes

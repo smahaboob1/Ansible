@@ -1,0 +1,11 @@
+[web_grp]
+web01_ubuntu1
+web02_ubuntu2
+web01_centos1
+
+[db_grp]
+web02_centos2
+
+[southeast:children]
+web_grp
+db_grp

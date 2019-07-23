@@ -1,0 +1,28 @@
+---
+- hosts: all
+  tasks:
+    - name: Create user - To verify host variables and debug vars
+      user:
+         name: "{{USRNAME}}"
+         comment: "{{COMM}}"
+
+    - debug:
+         var: USRNAME
+        
+    - debug:
+         var: COMM 
+
+    - name: Create User - To verify host variables and register var
+      user:
+         name: "{{USRNAME}}"
+         comment: "{{COMM}}"
+      register: var_out
+      
+    - debug:
+         var: var_out
+
+    - debug:
+         var: var_out.name
+   
+    - debug:
+         var: var_out.comment

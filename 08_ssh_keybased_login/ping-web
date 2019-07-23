@@ -1,0 +1,22 @@
+web01_ubuntu1 ansible_host=192.168.5.102
+web02_ubuntu2 ansible_host=192.168.5.103
+web01_centos1 ansible_host=192.168.5.104
+web02_centos2 ansible_host=192.168.5.105
+
+[websrv_grp]
+web01_ubuntu1
+web02_ubuntu2
+web01_centos1
+
+[dbsrv_grp]
+web02_centos2
+
+[allsrv_grp:children]
+websrv_grp
+dbsrv_grp
+
+
+[allsrv_grp:vars]
+ansible_user=devops
+ansible_ssh_private_key_file=/root/.ssh/id_rsa
+

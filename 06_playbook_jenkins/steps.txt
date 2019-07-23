@@ -1,0 +1,6 @@
+vim ansible.cfg
+[defaults]
+host_key_checking = False
+inventory = int-qa
+timeout = 15
+log_path = /var/log/ansible.log
