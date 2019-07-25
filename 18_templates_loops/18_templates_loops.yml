@@ -1,0 +1,98 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+
+################################### Install NTP #########################################
+
+     - name: Deploy NTP SVC RedHat
+       yum:
+         name: "{{item}}" 
+         state: present
+       loop:
+         - tomcat
+         - tomcat-webapps
+         - tomcat-admin-webapps
+         - tomcat-docs-webapp
+         - tomcat-javadoc
+       when:
+         ansible_os_family == "RedHat"
+   
+     - name: Deploy NTP SVC Debian
+       yum:
+         name: "{{item}}"
+         state: present
+       loop:
+         - wget
+         - git
+       when:
+         ansible_os_family == "Debian"
+
+################################### Start NTP #########################################
+     
+     - name: Restart NTP SVC RedHat
+       service:
+         name: tomcat 
+         state: started
+         enabled: yes
+       when:
+         ansible_os_family == "RedHat"
+
+     - name: Restart NTP SVC Debian
+       service:
+         name: tomcat
+         state: started
+         enabled: yes
+       when:
+         ansible_os_family == "Debian"
+
+################################### Copy NTP files #########################################
+
+     - name: Copy NTP files into RedHat
+       template:
+         src: templates/ntp_conf_centos.j2
+         dest: /etc/ntp.conf 
+         backup: yes
+       notify: 
+         - Restart NTP SVC RedHat
+       register: log_out_redhat
+       when:
+         ansible_os_family == "RedHat"
+
+     - name: Copy NTP files into Debian
+       template:
+         src: templates/ntp_conf_ubuntu.j2
+         dest: /etc/ntp.conf 
+         backup: yes
+       notify: 
+         -  Restart NTP SVC Debian
+       register: log_out_debian
+       when:
+         ansible_os_family == "Debian"
+
+     - debug:
+         var: log_out_redhat
+
+     - debug:
+         var: log_out_debian
+
+################################### Restart NTP services #########################################
+
+  handlers:
+     - name: Restart NTP SVC RedHat
+       service:
+         name: "{{item}}"
+         state: restarted
+       loop:
+         - tomcat
+       when:
+         ansible_os_family == "RedHat"
+
+     - name: Restart NTP SVC Debian
+       service:
+         name: "{{item}}"
+         state: restarted
+       loop:
+         - tomcat
+       when:
+         ansible_os_family == "Debian"

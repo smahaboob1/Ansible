@@ -1,0 +1,10 @@
+ntp1: 0.centos.north-america.pool.ntp.org
+ntp2: 1.centos.north-america.pool.ntp.org
+ntp3: 2.centos.north-america.pool.ntp.org
+ntp4: 3.centos.north-america.pool.ntp.org
+
+
+ntp5: 0.ubuntu.north-america.pool.ntp.org
+ntp6: 1.ubuntu.north-america.pool.ntp.org
+ntp7: 2.ubuntu.north-america.pool.ntp.org
+ntp8: 3.ubuntu.north-america.pool.ntp.org
